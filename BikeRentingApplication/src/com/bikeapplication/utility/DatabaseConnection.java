@@ -1,11 +1,13 @@
 package com.bikeapplication.utility;
 
-import com.bikeapplication.constants.*;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Logger;
+
+import com.bikeapplication.constants.Constants;
 
 public class DatabaseConnection {
 	static Logger logger = Logger.getLogger(DatabaseConnection.class.getName());
@@ -22,6 +24,24 @@ public class DatabaseConnection {
 			logger.warning("Problem while creating a connection");			
 		}
 		return null;
+	}
+	
+	public void closeConnection(ResultSet result, Statement statement, Connection connection) {
+		try {
+			if(result != null) {
+				result.close();
+			}
+			if(statement != null) {
+				statement.close();
+			}
+			if(connection != null) {
+				connection.close();
+			}
+		} catch(SQLException e) {
+			logger.warning("Problem while closing database connection");
+		}
+		
+		
 	}
 
 }
