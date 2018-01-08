@@ -10,38 +10,36 @@ import java.util.logging.Logger;
 import com.bikeapplication.constants.Constants;
 
 public class DatabaseConnection {
-	static Logger logger = Logger.getLogger(DatabaseConnection.class.getName());
+	Logger logger = Logger.getLogger(DatabaseConnection.class.getName());
+
 	public Connection getConnection() {
 		try {
-		Class.forName(Constants.JDBC_DRIVER);
+			Class.forName(Constants.JDBC_DRIVER);
 		} catch (ClassNotFoundException e) {
 			logger.warning("Problem in the jdbc driver");
 		}
 		try {
-		Connection connection = DriverManager.getConnection(Constants.URL, Constants.USERNAME, Constants.PASSWORD);
-		return connection;
+			Connection connection = DriverManager.getConnection(Constants.URL, Constants.USERNAME, Constants.PASSWORD);
+			return connection;
 		} catch (SQLException e) {
-			logger.warning("Problem while creating a connection");			
+			logger.warning("Problem while creating a connection");
 		}
 		return null;
 	}
-	
+
 	public void closeConnection(ResultSet result, Statement statement, Connection connection) {
 		try {
-			if(result != null) {
+			if (result != null) {
 				result.close();
 			}
-			if(statement != null) {
+			if (statement != null) {
 				statement.close();
 			}
-			if(connection != null) {
+			if (connection != null) {
 				connection.close();
 			}
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			logger.warning("Problem while closing database connection");
 		}
-		
-		
 	}
-
 }

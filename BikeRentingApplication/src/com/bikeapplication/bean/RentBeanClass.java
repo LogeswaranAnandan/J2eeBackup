@@ -3,10 +3,18 @@ package com.bikeapplication.bean;
 public class RentBeanClass {
 	private int userid;
 	private int bikeid;
-	private String rented_date;
-	private String rented_time;
+	private String rented_datetime;
 	private int duration;
 	private int estimatedamount;
+	private int advancepaid;
+
+	public String getRented_datetime() {
+		return rented_datetime;
+	}
+
+	public void setRented_datetime(String rented_datetime) {
+		this.rented_datetime = rented_datetime;
+	}
 
 	public int getUserid() {
 		return userid;
@@ -16,22 +24,6 @@ public class RentBeanClass {
 		this.userid = userid;
 	}
 
-	public String getRented_date() {
-		return rented_date;
-	}
-
-	public void setRented_date(String rented_date) {
-		this.rented_date = rented_date;
-	}
-
-	public String getRented_time() {
-		return rented_time;
-	}
-
-	public void setRented_time(String rented_time) {
-		this.rented_time = rented_time;
-	}
-
 	public int getEstimatedamount() {
 		return estimatedamount;
 	}
@@ -39,8 +31,6 @@ public class RentBeanClass {
 	public void setEstimatedamount(int estimatedamount) {
 		this.estimatedamount = estimatedamount;
 	}
-
-	int advancepaid;
 
 	public int getBikeid() {
 		return bikeid;
@@ -65,11 +55,11 @@ public class RentBeanClass {
 	public void setAdvancepaid(int advancepaid) {
 		this.advancepaid = advancepaid;
 	}
-	
+
 	public String toString() {
-		return "UserId : " + this.getUserid() + "\nBikeId : " + this.getBikeid() + "\nRented date : " + this.getRented_date()
-				+ "\nRented time : " + this.getRented_time() + "\nDuration : " + this.getDuration() + "\nEstimated Payment : " 
-				+ this.getEstimatedamount() + "\nAdvance Paid : " + this.getAdvancepaid() + "\nPending amount : " 
+		return "UserId : " + this.getUserid() + "\nBikeId : " + this.getBikeid() + "\nRented datetime : "
+				+ this.getRented_datetime() + "\nDuration : " + this.getDuration() + "\nEstimated Payment : "
+				+ this.getEstimatedamount() + "\nAdvance Paid : " + this.getAdvancepaid() + "\nPending amount : "
 				+ (this.getEstimatedamount() - this.getAdvancepaid());
 	}
 
