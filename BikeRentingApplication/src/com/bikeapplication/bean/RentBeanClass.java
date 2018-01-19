@@ -1,12 +1,14 @@
 package com.bikeapplication.bean;
 
 public class RentBeanClass {
+	private int transacationid;
 	private int userid;
 	private int bikeid;
 	private String rented_datetime;
 	private int duration;
 	private int estimatedamount;
 	private int advancepaid;
+	private String status;
 
 	public String getRented_datetime() {
 		return rented_datetime;
@@ -56,11 +58,27 @@ public class RentBeanClass {
 		this.advancepaid = advancepaid;
 	}
 
+	public int getTransacationid() {
+		return transacationid;
+	}
+
+	public void setTransacationid(int transacationid) {
+		this.transacationid = transacationid;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public String toString() {
-		return "UserId : " + this.getUserid() + "\nBikeId : " + this.getBikeid() + "\nRented datetime : "
+		return "TransactionId : " + this.getTransacationid() + "\nUserId : " + this.getUserid() + "\nBikeId : " + this.getBikeid() + "\nRented datetime : "
 				+ this.getRented_datetime() + "\nDuration : " + this.getDuration() + "\nEstimated Payment : "
 				+ this.getEstimatedamount() + "\nAdvance Paid : " + this.getAdvancepaid() + "\nPending amount : "
-				+ (this.getEstimatedamount() - this.getAdvancepaid());
+				+ (this.getEstimatedamount() - this.getAdvancepaid()) + "\nStatus : " + this.getStatus();
 	}
 
 }

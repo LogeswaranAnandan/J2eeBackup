@@ -4,10 +4,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
 import com.bikeapplication.bean.BikeBeanClass;
 import com.bikeapplication.bean.RentBeanClass;
 import com.bikeapplication.bean.UserBeanClass;
@@ -19,34 +19,31 @@ public class BikeApplicationDao {
 	DatabaseConnection dbconnection = new DatabaseConnection();
 	Logger logger = Logger.getLogger(BikeApplicationDao.class.getName());
 	Connection connection = null;
-	Statement statement = null;
+	PreparedStatement statement = null;
 	ResultSet result = null;
 
 	// Executes a SELECT QUERY a returns a ResultSet
-	public ResultSet selectQueryExecutor(String query) {
+	public PreparedStatement selectQueryExecutor(String query) {
 		try {
 			connection = dbconnection.getConnection();
-			statement = connection.createStatement();
-			result = statement.executeQuery(query);
-			return result;
+			statement = connection.prepareStatement(query);
+			return statement;
 		} catch (SQLException e) {
 			logger.warning("Problem while accessing the database");
 		}
-		return result;
+		return statement;
 	}
 
 	// Executes a INSERT or UPDATE or DELETE QUERY and returns rows affected
-	public int queryExecutor(String query) {
+	public PreparedStatement queryExecutor(String query) {
 		try {
 			connection = dbconnection.getConnection();
-			statement = connection.createStatement();
-			int rowsaffected = statement.executeUpdate(query);
-			closeConnection(null,statement,connection);
-			return rowsaffected;
+			statement = connection.prepareStatement(query);
+			return statement;
 		} catch (SQLException e) {
 			logger.warning("Problem while inserting the values");
 		}
-		return 0;
+		return statement;
 	}
 
 	// Method to close a connection after user exit
@@ -56,9 +53,12 @@ public class BikeApplicationDao {
 
 	// Method to fetch customer name using customer id
 	public String getUserName(int userid) {
-		String query = "select username from userdetails where userid = " + userid;
-		ResultSet result = selectQueryExecutor(query);
+		String query = Constants.GET_USER_NAME;
+		PreparedStatement statement = selectQueryExecutor(query);
+		ResultSet result = null;
 		try {
+			statement.setInt(1, userid);
+			result = statement.executeQuery();
 			if (result.next()) {
 				return result.getString(1);
 			}
@@ -70,18 +70,59 @@ public class BikeApplicationDao {
 		return null;
 	}
 
-	// Method to set availability of the bike
-	public void setAvailability(String status, int bikeid) {
-		String query = "update bikedetails set availability = '" + status + "' where bikeid = " + bikeid;
-		queryExecutor(query);
+	// Method to get the availability of bike
+	public int fetchAvailability(int bikeid) {
+		String query = Constants.GET_AVAILABILITY;
+		PreparedStatement statement = selectQueryExecutor(query);
+		ResultSet result = null;
+		try {
+			statement.setInt(1, bikeid);
+			result = statement.executeQuery();
+			if (result.next()) {
+				return result.getInt("availability");
+			}
+		} catch (SQLException e) {
+			logger.warning("Problem while fetching the availability");
+		} finally {
+			closeConnection(result, statement, connection);
+		}
+		return 0;
+	}
+
+	public void decreaseAvailability(int bikeid) {
+		String query = Constants.ALTER_AVAILABILITY;
+		int temp = fetchAvailability(bikeid) - 1;
+		PreparedStatement statement = queryExecutor(query);
+		try {
+			statement.setInt(1, temp);
+			statement.setInt(2, bikeid);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.warning("Problem while decreasing availability");
+		}
+	}
+
+	public void increaseAvailability(int bikeid) {
+		String query = Constants.ALTER_AVAILABILITY;
+		int temp = fetchAvailability(bikeid) + 1;
+		PreparedStatement statement = queryExecutor(query);
+		try {
+			statement.setInt(1, temp);
+			statement.setInt(2, bikeid);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.warning("Problem while decreasing availability");
+		}
 	}
 
 	// Method to display all bikes in bikedetails table
 	public List<BikeBeanClass> viewAllBike() {
 		String query = Constants.ALL_BIKES;
-		ResultSet result = selectQueryExecutor(query);
+		PreparedStatement statement = selectQueryExecutor(query);
+		ResultSet result = null;
 		List<BikeBeanClass> bikebeanlist = new ArrayList<>();
 		try {
+			result = statement.executeQuery();
 			while (result.next()) {
 				BikeBeanClass bikebean = new BikeBeanClass();
 				bikebean.setBikeid(result.getInt(1));
@@ -89,7 +130,7 @@ public class BikeApplicationDao {
 				bikebean.setBikename(result.getString(3));
 				bikebean.setCharge(result.getInt(4));
 				bikebean.setRegno(result.getString(5));
-				bikebean.setAvailability(result.getString(6));
+				bikebean.setAvailability(result.getInt(6));
 				bikebeanlist.add(bikebean);
 			}
 			return bikebeanlist;
@@ -104,9 +145,11 @@ public class BikeApplicationDao {
 	// Method to display only the available bikes in bikedetails table
 	public List<BikeBeanClass> viewAvailableBikes() {
 		String query = Constants.AVAILABLE_BIKES;
-		ResultSet result = selectQueryExecutor(query);
+		PreparedStatement statement = selectQueryExecutor(query);
+		ResultSet result = null;
 		List<BikeBeanClass> bikebeanlist = new ArrayList<>();
 		try {
+			result = statement.executeQuery();
 			while (result.next()) {
 				BikeBeanClass bikebean = new BikeBeanClass();
 				bikebean.setBikeid(result.getInt(1));
@@ -114,7 +157,7 @@ public class BikeApplicationDao {
 				bikebean.setBikename(result.getString(3));
 				bikebean.setCharge(result.getInt(4));
 				bikebean.setRegno(result.getString(5));
-				bikebean.setAvailability(result.getString(6));
+				bikebean.setAvailability(result.getInt(6));
 				bikebeanlist.add(bikebean);
 			}
 			return bikebeanlist;
@@ -128,25 +171,36 @@ public class BikeApplicationDao {
 
 	// Method to rent a bike and insert the value into rentdetails table
 	public void rentBike(RentBeanClass rentbean) {
-		String query = "insert into rentdetails values(" + Constants.USERID + "," + rentbean.getBikeid()
-				+ ",current_timestamp(), " + rentbean.getDuration() + "," + rentbean.getDuration()
-				+ " * (select charge from bikedetails where bikeid = " + rentbean.getBikeid() + ")" + ","
-				+ rentbean.getAdvancepaid() + ")";
-		int rowsaffected = queryExecutor(query);
+		String query = Constants.RENT_BIKE;
+		PreparedStatement statement = queryExecutor(query);
+		int rowsaffected = 0;
+		try {
+			statement.setInt(1, Constants.USERID);
+			statement.setInt(2, rentbean.getBikeid());
+			statement.setInt(3, rentbean.getDuration());
+			statement.setInt(4, rentbean.getDuration());
+			statement.setInt(5, rentbean.getBikeid());
+			statement.setInt(6, rentbean.getAdvancepaid());
+			rowsaffected = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.warning("Problem while inserting the rented bike");
+		}
 		if (rowsaffected > 0) {
 			logger.info("Bike is rented successfully");
 		} else {
 			logger.warning("Please enter valid credentials and try again");
 			return;
 		}
-		setAvailability(Constants.UNAVAILABLE, rentbean.getBikeid());
+		decreaseAvailability(rentbean.getBikeid());
 	}
 
 	public void userRentedBike(int userid) {
-		String query = "select * from bikedetails where bikeid in (select bikeid from rentdetails where userid = "
-				+ userid + ")";
-		ResultSet result = selectQueryExecutor(query);
+		String query = Constants.USER_RENTED_BIKE;
+		PreparedStatement statement = selectQueryExecutor(query);
+		ResultSet result = null;
 		try {
+			statement.setInt(1, userid);
+			result = statement.executeQuery();
 			while (result.next()) {
 				logger.info("\nBike ID : " + result.getInt(1) + "\nManufacturer : " + result.getString(2)
 						+ "\nBike Name : " + result.getString(3));
@@ -157,53 +211,86 @@ public class BikeApplicationDao {
 			closeConnection(result, statement, connection);
 		}
 	}
-
-	public void returnBike(int bikeid) {
-		String query = "Select * from rentdetails where userid = " + Constants.USERID + " AND bikeid = " + bikeid;
+	
+	public RentBeanClass calculateRentAmount(int bikeid) {
+		String query = Constants.RETURN_BIKE;
 		RentBeanClass rentbean = new RentBeanClass();
 		BikeRentCalculator rentCalculator = new BikeRentCalculator();
-		ResultSet result = selectQueryExecutor(query);
+		PreparedStatement statement = selectQueryExecutor(query);
+		ResultSet result = null;
 		try {
-			if(result.next()) {
-				rentbean.setUserid(result.getInt(1));
-				rentbean.setBikeid(result.getInt(2));
-				rentbean.setRented_datetime(result.getString(3));
-				rentbean.setDuration(result.getInt(4));
-				rentbean.setEstimatedamount(result.getInt(5));
-				rentbean.setAdvancepaid(result.getInt(6));
+			statement.setInt(1, Constants.USERID);
+			statement.setInt(2, bikeid);
+			result = statement.executeQuery();
+			if (result.next()) {
+				rentbean.setTransacationid(result.getInt(1));
+				rentbean.setUserid(result.getInt(2));
+				rentbean.setBikeid(result.getInt(3));
+				rentbean.setRented_datetime(result.getString(4));
+				rentbean.setDuration(result.getInt(5));
+				rentbean.setEstimatedamount(result.getInt(6));
+				rentbean.setAdvancepaid(result.getInt(7));
+				rentbean.setStatus(result.getString(8));
 			}
 		} catch (SQLException e) {
 			logger.warning("Problem while returning the bike");
+		} finally {
+			closeConnection(result, statement, connection);
 		}
 		rentCalculator.CalculateAmount(rentbean, getBikeDetails(bikeid).getCharge());
-		deleteFromRent(bikeid);
-		
+		return rentbean;
 	}
-	
-	public void deleteFromRent(int bikeid) {
-		String query = "Delete from rentdetails where userid = " + Constants.USERID + " AND bikeid = " + bikeid;
-		int rowsaffected = queryExecutor(query);
+
+	public void returnBike(int bikeid) {
+		try {
+		RentBeanClass rentbean = calculateRentAmount(bikeid);
+		updateRentStatus(rentbean.getTransacationid(), rentbean.getBikeid());
+		} catch(Exception e) {
+			logger.warning("Problem while returning the bike");
+		}
+	}
+
+	public void updateRentStatus(int transactionid, int bikeid) {
+		String query = Constants.UPDATE_RENT_STATUS;
+		PreparedStatement statement = queryExecutor(query);
+		int rowsaffected = 0;
+		try {
+			statement.setInt(1, transactionid);
+			rowsaffected = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.warning("Problem while updating status in rentdetails table");
+		}
 		if (rowsaffected > 0) {
 			logger.info("Bike is returned successfully");
+			increaseAvailability(bikeid);
 		} else {
 			logger.warning("Please enter valid credentials and try again");
 			return;
 		}
-		setAvailability(Constants.AVAILABLE, bikeid);
 	}
 
 	public boolean userLogin(String username, String password) {
 		String query = "";
+		PreparedStatement statement = null;
+		ResultSet result = null;
 		try {
 			long phonenumber = Long.parseLong(username);
-			query = "select userid from userdetails where phonenumber = " + phonenumber + " AND userpassword = '"
-					+ password + "' AND userrole = 'Customer';";
+			query = Constants.USER_LOGIN_PHONENUMBER;
+			statement = selectQueryExecutor(query);
+			statement.setLong(1, phonenumber);
+			statement.setString(2, password);
 		} catch (Exception e) {
-			query = "select userid from userdetails where username = '" + username + "' AND userpassword = '" + password
-					+ "' AND userrole = 'Customer';";
-		} 
-		ResultSet result = selectQueryExecutor(query);
+			query = Constants.USER_LOGIN_USERNAME;
+			try {
+				statement = selectQueryExecutor(query);
+				statement.setString(1, username);
+				statement.setString(2, password);
+			} catch (SQLException ex) {
+				logger.warning("Problem during user login");
+			}
+		}
 		try {
+			result = statement.executeQuery();
 			if (result.next()) {
 				int userid = result.getInt(1);
 				Constants.setUSERID(userid);
@@ -221,10 +308,47 @@ public class BikeApplicationDao {
 	}
 
 	public boolean userSignup(UserBeanClass userbean) {
-		String query = "insert into userdetails values(" + (System.currentTimeMillis() % 1000000) + ",'"
-				+ userbean.getUsername() + "'," + (System.currentTimeMillis() % 100000) + "," + userbean.getPhonenumber() + ",'"
-				+ userbean.getLicenseno() + "','" + userbean.getUserpassword() + "','Customer')";
-		int rowsaffected = queryExecutor(query);
+		String query = Constants.USER_SIGNUP;
+		PreparedStatement statement = queryExecutor(query);
+		int rowsaffected = 0;
+		boolean flag = false;
+		userbean.setAddressid(System.currentTimeMillis() / 1000 % 1000);
+		try {
+			statement.setLong(1, (System.currentTimeMillis() % 1000));
+			statement.setString(2, userbean.getUsername());
+			statement.setLong(3, userbean.getAddressid());
+			statement.setLong(4, userbean.getPhonenumber());
+			statement.setString(5, userbean.getLicenseno());
+			statement.setString(6, userbean.getUserpassword());
+			rowsaffected = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.warning("Problem while registering the user details");
+		} finally {
+			closeConnection(result, statement, connection);
+		}
+		flag = userSignupAddress(userbean);
+		if ((rowsaffected > 0) && (flag == true)) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean userSignupAddress(UserBeanClass userbean) {
+		String query = Constants.USER_SIGNUP_ADDRESS;
+		PreparedStatement statement = queryExecutor(query);
+		int rowsaffected = 0;
+		try {
+			statement.setLong(1, userbean.getAddressid());
+			statement.setString(2, userbean.getStreet());
+			statement.setString(3, userbean.getArea());
+			statement.setString(4, userbean.getCity());
+			statement.setInt(5, userbean.getPincode());
+			rowsaffected = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.warning("Problem while registering the user details");
+		} finally {
+			closeConnection(result, statement, connection);
+		}
 		if (rowsaffected > 0) {
 			return true;
 		}
@@ -232,10 +356,12 @@ public class BikeApplicationDao {
 	}
 
 	public List<RentBeanClass> viewRentedBikes() {
-		String query = "select * from rentdetails";
-		ResultSet result = selectQueryExecutor(query);
+		String query = Constants.VIEW_RENTED_BIKES;
+		ResultSet result = null;
 		List<RentBeanClass> rentbeanlist = new ArrayList<>();
 		try {
+			PreparedStatement statement = selectQueryExecutor(query);
+			result = statement.executeQuery();
 			while (result.next()) {
 				RentBeanClass rentbean = new RentBeanClass();
 				rentbean.setUserid(result.getInt(1));
@@ -254,19 +380,22 @@ public class BikeApplicationDao {
 		}
 		return null;
 	}
-	
+
 	public BikeBeanClass getBikeDetails(int bikeid) {
 		BikeBeanClass bikebean = new BikeBeanClass();
-		String query = "select * from bikedetails where bikeid = " + bikeid;
-		ResultSet result = selectQueryExecutor(query);
+		String query = Constants.GET_BIKE_DETAILS;
+		PreparedStatement statement = selectQueryExecutor(query);
+		ResultSet result = null;
 		try {
-			if(result.next()) {
+			statement.setInt(1, bikeid);
+			result = statement.executeQuery();
+			if (result.next()) {
 				bikebean.setBikeid(result.getInt(1));
 				bikebean.setManufacturer(result.getString(2));
 				bikebean.setBikename(result.getString(3));
 				bikebean.setCharge(result.getInt(4));
 				bikebean.setRegno(result.getString(5));
-				bikebean.setAvailability(result.getString(6));
+				bikebean.setAvailability(result.getInt(6));
 				return bikebean;
 			}
 		} catch (SQLException e) {
@@ -278,10 +407,22 @@ public class BikeApplicationDao {
 	}
 
 	public boolean addNewBike(BikeBeanClass bikebean) {
-		String query = "insert into bikedetails values(" + bikebean.getBikeid() + ",'" + bikebean.getManufacturer()
-				+ "','" + bikebean.getBikename() + "'," + bikebean.getCharge() + ",'" + bikebean.getRegno()
-				+ "','Available')";
-		int rowsaffected = queryExecutor(query);
+		String query = Constants.ADD_NEW_BIKE;
+		PreparedStatement statement = queryExecutor(query);
+		int rowsaffected = 0;
+		try {
+			statement.setInt(1, bikebean.getBikeid());
+			statement.setString(2, bikebean.getManufacturer());
+			statement.setString(3, bikebean.getBikename());
+			statement.setInt(4, bikebean.getCharge());
+			statement.setString(5, bikebean.getRegno());
+			statement.setInt(6, bikebean.getAvailability());
+			rowsaffected = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.warning("Problem while adding new bike");
+		} finally {
+			closeConnection(result, statement, connection);
+		}
 		if (rowsaffected > 0) {
 			return true;
 		}
@@ -290,16 +431,27 @@ public class BikeApplicationDao {
 
 	public boolean adminLogin(String username, String password) {
 		String query = "";
+		PreparedStatement statement = null;
+		ResultSet result = null;
 		try {
 			long phonenumber = Long.parseLong(username);
-			query = "select userid from userdetails where phonenumber = " + phonenumber + " AND userpassword = '"
-					+ password + "' AND userrole = 'Admin';";
+			query = Constants.ADMIN_LOGIN_PHONENUMBER;
+			statement = selectQueryExecutor(query);
+			statement.setLong(1, phonenumber);
+			statement.setString(2, password);
+
 		} catch (Exception e) {
-			query = "select userid from userdetails where username = '" + username + "' AND userpassword = '" + password
-					+ "' AND userrole = 'Admin';";
-		} 
-		ResultSet result = selectQueryExecutor(query);
+			try {
+				query = Constants.ADMIN_LOGIN_USERNAME;
+				statement = selectQueryExecutor(query);
+				statement.setString(1, username);
+				statement.setString(2, password);
+			} catch (SQLException ex) {
+				logger.info("Problem during admin login");
+			}
+		}
 		try {
+			result = statement.executeQuery();
 			if (result.next()) {
 				return true;
 			}
@@ -310,12 +462,14 @@ public class BikeApplicationDao {
 		}
 		return false;
 	}
-	
+
 	public List<UserBeanClass> viewAllUsers() {
 		String query = Constants.VIEW_USER_DETAILS;
-		ResultSet result = selectQueryExecutor(query);
+		PreparedStatement statement = selectQueryExecutor(query);
+		ResultSet result = null;
 		List<UserBeanClass> userbeanlist = new ArrayList<>();
 		try {
+			result = statement.executeQuery();
 			while (result.next()) {
 				UserBeanClass userbean = new UserBeanClass();
 				userbean.setUserid(result.getInt(1));
@@ -328,7 +482,7 @@ public class BikeApplicationDao {
 				userbean.setCity(result.getString(11));
 				userbean.setPincode(result.getInt(12));
 				userbeanlist.add(userbean);
-				}
+			}
 			return userbeanlist;
 		} catch (SQLException e) {
 			logger.warning("Problem while displaying the bikes");
@@ -336,7 +490,7 @@ public class BikeApplicationDao {
 			closeConnection(result, statement, connection);
 		}
 		return null;
-		
+
 	}
 
 }

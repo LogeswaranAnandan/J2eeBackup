@@ -2,9 +2,9 @@ package com.bikeapplication.bean;
 
 public class UserBeanClass {
 
-	private int userid;
+	private long userid;
 	private String username;
-	private int addressid;
+	private long addressid;
 	private long phonenumber;
 	private String licenseno;
 	private String userpassword;
@@ -54,11 +54,11 @@ public class UserBeanClass {
 		this.pincode = pincode;
 	}
 
-	public int getUserid() {
+	public long getUserid() {
 		return userid;
 	}
 
-	public void setUserid(int userid) {
+	public void setUserid(long userid) {
 		this.userid = userid;
 	}
 
@@ -78,11 +78,11 @@ public class UserBeanClass {
 		this.username = username;
 	}
 
-	public int getAddressid() {
+	public long getAddressid() {
 		return addressid;
 	}
 
-	public void setAddressid(int addressid) {
+	public void setAddressid(long addressid) {
 		this.addressid = addressid;
 	}
 

@@ -6,7 +6,7 @@ public class BikeBeanClass {
 	private String bikename;
 	private int charge;
 	private String regno;
-	private String availability;
+	private int availability;
 
 	public int getBikeid() {
 		return bikeid;
@@ -48,11 +48,11 @@ public class BikeBeanClass {
 		this.regno = regno;
 	}
 
-	public String getAvailability() {
+	public int getAvailability() {
 		return availability;
 	}
 
-	public void setAvailability(String availability) {
+	public void setAvailability(int availability) {
 		this.availability = availability;
 	}
 
