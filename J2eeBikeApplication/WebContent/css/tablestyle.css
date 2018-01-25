@@ -1,0 +1,13 @@
+@charset "ISO-8859-1";
+
+tr:nth-child(2n) {
+    background: linear-gradient(to right, white, aliceblue);
+}
+
+tr:nth-child(4n) {
+    background: linear-gradient(to right, aliceblue, white);
+}
+
+input {
+	outline: none;
+}

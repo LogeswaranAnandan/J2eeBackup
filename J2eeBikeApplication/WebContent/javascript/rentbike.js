@@ -1,0 +1,22 @@
+document.getElementById('table').addEventListener('click', setHiddenFieldValue);
+
+function setHiddenFieldValue(event) {
+	var target = event.srcElement;
+	if(target.value == 'Rent this Bike') {
+		var id = target.dataset.id;
+		var duration = prompt('Enter the Duration of Rent(in hours)');
+		if(duration != '' && duration != null && duration != 0) {
+			var advanceAmount = prompt('Enter the Advance amount to be paid');
+				if(advanceAmount != '' && advanceAmount != null && advanceAmount >= 500) {
+					document.getElementById('rent-duration-' + id).value = duration;
+					document.getElementById('advance-paid-' + id).value = advanceAmount;
+				} else {
+					alert('Please enter a valid advance amount');
+					event.preventDefault();
+				}
+		} else {
+			alert('Please enter a valid duration');
+			event.preventDefault();
+		}
+	}
+}

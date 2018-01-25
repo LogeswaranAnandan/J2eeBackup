@@ -1,0 +1,118 @@
+@charset "ISO-8859-1";
+
+nav {
+	background-color: cadetblue;
+}
+
+.nav-form {
+	display: flex;
+}
+
+.nav-form input[type="submit"] {
+	flex-basis: 0;
+	flex-grow: 1;
+	flex-shrink: 5;
+	padding: 15px;
+	background-color: cadetblue;
+	font-size: 18px;
+	border: none;
+	cursor: pointer;
+	color: white;
+}
+
+.nav-form input[type="submit"]:hover,
+button > a:hover,
+input[value="Logout"]:hover {
+	color: #ffcc66;
+}
+
+#user-name-container {
+	flex-basis: 0;
+    flex-grow: 2;
+    flex-shrink: 2;
+    padding: 15px;
+    background-color: cadetblue;
+    text-align: center;
+    color: #ffcc66;
+    font-size: 22px;
+    position: relative;
+    cursor: pointer;
+}
+
+.user-name {
+    font-size: 23px;
+    font-weight: bold;
+    text-shadow: 2px 2px forestgreen;
+}
+
+table {
+	display: flex;
+	flex-direction: column;	
+	margin-top: 10px;
+	clear: both;
+}
+
+tr {
+	display: flex;
+}
+
+td,th {
+	flex-basis: 0;
+	flex-grow: 1;
+	text-align: justify;
+	padding: 10px;
+}
+
+th {
+	background-color: lightsteelblue;
+}
+
+tr:nth-child(odd) {
+    background: linear-gradient(to right, white, aliceblue);
+}
+
+tr:nth-child(even) {
+    background: linear-gradient(to right, aliceblue, white);
+}
+
+div.back-btn {
+	width: fit-content;
+	margin : 30px auto 0 auto;
+}
+
+.back-btn button {
+	background: cadetblue;
+}
+
+button > a {
+	text-decoration: none;
+	display: inline-block;
+	padding: 10px 20px;
+	font-size:18px;
+	color: white;
+}
+
+input[value="Logout"] {
+	float: right;
+    width: 300px;
+    padding: 15px;
+    background-color: cadetblue;
+    font-size: 18px;
+    border: 2px solid cornflowerblue;
+    cursor: pointer;
+    color: white;
+    position: absolute;
+    right: 7px;
+}
+
+.display-none {
+	display: none;
+}
+
+.display-block {
+	display: block;
+}
+
+input {
+	outline: none;
+}
