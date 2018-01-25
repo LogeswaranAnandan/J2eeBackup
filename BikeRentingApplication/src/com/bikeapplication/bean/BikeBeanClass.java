@@ -5,7 +5,6 @@ public class BikeBeanClass {
 	private String Manufacturer;
 	private String bikename;
 	private int charge;
-	private String regno;
 	private int availability;
 
 	public int getBikeid() {
@@ -39,15 +38,7 @@ public class BikeBeanClass {
 	public void setCharge(int charge) {
 		this.charge = charge;
 	}
-
-	public String getRegno() {
-		return regno;
-	}
-
-	public void setRegno(String regno) {
-		this.regno = regno;
-	}
-
+	
 	public int getAvailability() {
 		return availability;
 	}
@@ -58,7 +49,6 @@ public class BikeBeanClass {
 
 	public String toString() {
 		return "Bikeid : " + this.getBikeid() + "\nManufacturer : " + this.getManufacturer() + "\nBike Name : "
-				+ this.getBikename() + "\nCharge(per hour) : " + this.getCharge() + "\nRegistration number : "
-				+ this.getRegno() + "\nAvailability : " + this.getAvailability();
+				+ this.getBikename() + "\nCharge(per hour) : " + this.getCharge() + "\nAvailability : " + this.getAvailability();
 	}
 }

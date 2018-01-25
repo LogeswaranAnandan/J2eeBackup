@@ -109,9 +109,10 @@ public class BikeRentingMethods {
 
 	public void viewAllBikes() {
 		List<BikeBeanClass> bikebean = dao.viewAllBike();
-		for (BikeBeanClass temp : bikebean) {
+		for(BikeBeanClass temp : bikebean) {
 			logger.info(temp.toString());
 		}
+		
 	}
 
 	public void viewAvailableBikes() {
@@ -151,12 +152,11 @@ public class BikeRentingMethods {
 
 	public void returnBike() {
 		try {
-			int bikeid;
 			dao.userRentedBike(Constants.USERID);
-			logger.info("Enter the bikeid to be returned : ");
-			bikeid = Integer.parseInt(scanner.nextLine());
-			logger.info("bike id : " + bikeid);
-			dao.returnBike(bikeid);
+			logger.info("Enter the registration number of bike to be returned : ");
+			String registrationNumber = scanner.nextLine();
+			logger.info("Registration Number : " + registrationNumber);
+			dao.returnBike(registrationNumber);
 		} catch (Exception e) {
 			logger.warning(Constants.INVALID_DATA);
 		}
@@ -165,11 +165,11 @@ public class BikeRentingMethods {
 	public void calculateBikeRent() {
 		String input;
 		do {
-			int bikeid;
 			dao.userRentedBike(Constants.USERID);
-			logger.info("Enter the bikeid to be returned : ");
-			bikeid = Integer.parseInt(scanner.nextLine());
-			dao.calculateRentAmount(bikeid);
+			logger.info("Enter the registration number of bike to be viewed : ");
+			String registrationNumber = scanner.nextLine();
+			logger.info("Registration Number : " + registrationNumber);
+			dao.calculateRentAmount(registrationNumber);
 			logger.info("Do you want to view rent for more bikes (y/n)?");
 			input = scanner.nextLine();
 		} while (input.equals("y"));
@@ -255,8 +255,6 @@ public class BikeRentingMethods {
 			bikebean.setBikename(scanner.nextLine());
 			logger.info("Enter the charge for renting(per hour)");
 			bikebean.setCharge(Integer.parseInt(scanner.nextLine()));
-			logger.info("Enter the registration number : ");
-			bikebean.setRegno(scanner.nextLine());
 			logger.info("Enter the number of bikes available : ");
 			bikebean.setAvailability(Integer.parseInt(scanner.nextLine()));
 			success = dao.addNewBike(bikebean);

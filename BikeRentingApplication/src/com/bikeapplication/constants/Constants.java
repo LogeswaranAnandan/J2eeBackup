@@ -20,14 +20,12 @@ public class Constants {
 			+ "userdetails.addressid = addressdetails.addressid AND userdetails.userrole = 'Customer'";
 	public static final String GET_USER_NAME = "select username from userdetails where userid = ?;";
 	public static final String GET_AVAILABILITY = "select availability from bikedetails where bikeid = ?";
-	public static final String RENT_BIKE = "insert into rentdetails(`userid`, `bikeid`, `rented_datetime`, `duration`, `estimatedamount`, `advancepaid`, `status`)"
-			+ " values(?,?,current_timestamp(),?,"
-			+ "? * (select charge from bikedetails where bikeid = ?),?,'Rented');";
-
-	public static final String USER_RENTED_BIKE = "select * from bikedetails where bikeid in "
-			+ "(select bikeid from rentdetails where userid =? AND status = 'Rented')";
-
-	public static final String RETURN_BIKE = "Select * from rentdetails where userid = ? AND bikeid = ? AND status = 'Rented'";
+	public static final String GET_REGISTRATION_NUMBER = "select registrationnumber from bikeregistrationdetails where bikeid = ? and status = 'Available' limit 1";
+	public static final String RENT_BIKE = "insert into rentdetails(`userid`, `bikeid`,`registrationnumber`, `rented_datetime`, `duration`, `estimatedamount`, `advancepaid`, `status`)"
+			+ " values(?,?,?,current_timestamp(),?,? * (select charge from bikedetails where bikeid = ?),?,'Rented');";
+	public static final String BIKE_STATUS_RENTED = "update bikeregistrationdetails set status = 'Rented' where registrationnumber = ?";
+	public static final String BIKE_STATUS_RETURNED = "update bikeregistrationdetails set status = 'Available' where registrationnumber = ?";
+	public static final String RETURN_BIKE = "Select * from rentdetails where userid = ? AND registrationnumber = ? AND status = 'Rented'";
 
 	public static final String UPDATE_RENT_STATUS = "Update rentdetails SET status = 'Returned' where transactionid = ?";
 	public static final String USER_LOGIN_PHONENUMBER = "select userid from userdetails where phonenumber = ? "
@@ -38,7 +36,7 @@ public class Constants {
 	public static final String USER_SIGNUP_ADDRESS = "insert into addressdetails values(?,?,?,?,?)";
 	public static final String VIEW_RENTED_BIKES = "select * from rentdetails";
 	public static final String GET_BIKE_DETAILS = "select * from bikedetails where bikeid = ?";
-	public static final String ADD_NEW_BIKE = "insert into bikedetails values(?,?,?,?,?,?)";
+	public static final String ADD_NEW_BIKE = "insert into bikedetails values(?,?,?,?,?)";
 	public static final String ADMIN_LOGIN_PHONENUMBER = "select userid from userdetails where phonenumber = ? AND"
 			+ " userpassword = ? AND userrole = 'Admin';";
 	public static final String ADMIN_LOGIN_USERNAME = "select userid from userdetails where username = ? AND"
@@ -52,4 +50,12 @@ public class Constants {
 	public static int getUSERID() {
 		return Constants.USERID;
 	}
+	
+	public static final String USER_RENTED_BIKE = "select registrationnumber,manufacturer,bikename,charge "
+			+ "from bikedetails inner join rentdetails where "
+			+ "bikedetails.bikeid = rentdetails.bikeid AND userid = ? AND "
+			+ "rentdetails.status = 'Rented';";
+	
+	public static final String GET_BIKEID = "select bikeid from bikeregistrationdetails where registrationnumber = ?";
+
 }

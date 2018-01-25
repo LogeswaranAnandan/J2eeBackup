@@ -4,11 +4,20 @@ public class RentBeanClass {
 	private int transacationid;
 	private int userid;
 	private int bikeid;
+	private String registrationNumber;
 	private String rented_datetime;
 	private int duration;
 	private int estimatedamount;
 	private int advancepaid;
 	private String status;
+	
+	public String getRegistrationNumber() {
+		return registrationNumber;
+	}
+
+	public void setRegistrationNumber(String registrationNumber) {
+		this.registrationNumber = registrationNumber;
+	}
 
 	public String getRented_datetime() {
 		return rented_datetime;
