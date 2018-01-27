@@ -7,6 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
 import com.bikeapplication.constants.Constants;
 
 public class DatabaseConnection {
@@ -14,14 +19,11 @@ public class DatabaseConnection {
 
 	public Connection getConnection() {
 		try {
-			Class.forName(Constants.JDBC_DRIVER);
-		} catch (ClassNotFoundException e) {
-			logger.warning("Problem in the jdbc driver");
-		}
-		try {
-			Connection connection = DriverManager.getConnection(Constants.URL, Constants.USERNAME, Constants.PASSWORD);
+			Context ctx = new InitialContext();
+			DataSource dataSource = (DataSource)ctx.lookup("java:comp/env/jdbc/bikerentingapplication");
+			Connection connection = dataSource.getConnection();
 			return connection;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			logger.warning("Problem while creating a connection");
 		}
 		return null;

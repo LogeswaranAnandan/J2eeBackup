@@ -43,14 +43,14 @@ input[value="Logout"] {
 	right: 0;
 }
 
-#rent-btn {
+.rent-btn {
     font-size: 30px;
     flex-grow: 0;
     display: block;
     width: fit-content;
     margin: 0 auto;
     margin-top: 50px;
-    border-radius: 15px;
+    border-radius: 5px;
     text-shadow: 2px 2px 2px steelblue;
     color: white;
     background-color: cadetblue;
@@ -61,7 +61,7 @@ input[value="Logout"] {
 }
 
 input[value="Rent a Bike"]:hover {
-	font-size: 33px;
+    color: #ffcc66;
 }
 
 input {

@@ -11,7 +11,8 @@
 <body>
 	<nav>
 		<div>
-			<form action="AdminServlet" class="nav-form">
+			<form action="AdminServlet" class="nav-form" id="nav-form">
+				<input type="hidden" id="user-request" name="user-request"/>
 				<input type="submit" name="admin-functionality" value="View All Bikes"/>
 				<input type="submit" name="admin-functionality" value="View All Rented Bikes"/>
 				<input type="submit" name="admin-functionality" value="Add New Bike"/>
@@ -28,6 +29,6 @@
 		</form>
 	</div>
 	
-	<script src="javascript/basicscript.js"></script>	
+	<script src="javascript/basicscxript.js"></script>	
 </body>
 </html>

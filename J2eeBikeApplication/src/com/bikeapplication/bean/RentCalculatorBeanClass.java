@@ -9,8 +9,15 @@ public class RentCalculatorBeanClass {
 	private int advancePaid;
 	private int remainingPayment;
 	private int remainingRentTime;
+	private String registrationNumber;
 	
 	
+	public String getRegistrationNumber() {
+		return registrationNumber;
+	}
+	public void setRegistrationNumber(String registrationNumber) {
+		this.registrationNumber = registrationNumber;
+	}
 	public int getRemainingRentTime() {
 		return remainingRentTime;
 	}

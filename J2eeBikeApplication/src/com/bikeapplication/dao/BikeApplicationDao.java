@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
 import com.bikeapplication.bean.BikeBeanClass;
 import com.bikeapplication.bean.RentBeanClass;
 import com.bikeapplication.bean.RentCalculatorBeanClass;
@@ -23,14 +27,14 @@ public class BikeApplicationDao {
 	ResultSet result = null;
 	DatabaseConnection dbconnection = new DatabaseConnection();
 	Logger logger = Logger.getLogger(BikeApplicationDao.class.getName());
-
+	
 	// Executes a SELECT QUERY a returns a ResultSet
 	public PreparedStatement selectQueryExecutor(String query) {
 		try {
-			connection = dbconnection.getConnection();
+			Connection connection = dbconnection.getConnection();
 			statement = connection.prepareStatement(query);
 			return statement;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			logger.warning("Problem while accessing the database");
 		}
 		return statement;
@@ -55,6 +59,7 @@ public class BikeApplicationDao {
 	
 	// Method to get the availability of bike
 	public int fetchAvailability(int bikeid) {
+		int availability = 0;
 		String query = Constants.GET_AVAILABILITY;
 		PreparedStatement statement = selectQueryExecutor(query);
 		ResultSet result = null;
@@ -62,14 +67,14 @@ public class BikeApplicationDao {
 			statement.setInt(1, bikeid);
 			result = statement.executeQuery();
 			if (result.next()) {
-				return result.getInt("availability");
+				availability = result.getInt("availability");
 			}
 		} catch (SQLException e) {
 			logger.warning("Problem while fetching the availability");
 		} finally {
 			closeConnection(result, statement, connection);
 		}
-		return 0;
+		return availability;
 	}
 
 	public void decreaseAvailability(int bikeid) {
@@ -82,6 +87,8 @@ public class BikeApplicationDao {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.warning("Problem while decreasing availability");
+		} finally {
+			closeConnection(result, statement, connection);
 		}
 	}
 
@@ -95,6 +102,8 @@ public class BikeApplicationDao {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.warning("Problem while decreasing availability");
+		} finally {
+			closeConnection(result, statement, connection);
 		}
 	}
 	
@@ -106,6 +115,8 @@ public class BikeApplicationDao {
 			statement.executeUpdate();
 		} catch (Exception e) {
 			logger.warning("updating status failed");
+		} finally {
+			closeConnection(result, statement, connection);
 		}
 	}
 	
@@ -117,6 +128,8 @@ public class BikeApplicationDao {
 			statement.executeUpdate();
 		} catch (Exception e) {
 			logger.warning("updating status as available failed");
+		} finally {
+			closeConnection(result, statement, connection);
 		}
 	}
 	
@@ -134,14 +147,13 @@ public class BikeApplicationDao {
 				bikebean.setBikeName(result.getString(3));
 				bikebean.setCharge(result.getInt(4));
 				bikebean.setAvailability(result.getInt(5));
-				return bikebean;
 			}
 		} catch (SQLException e) {
 			logger.warning("Problem occurred while fetching the bike details");
 		} finally {
 			closeConnection(result, statement, connection);
 		}
-		return null;
+		return bikebean;
 	}
 	
 	public Long userSignUp(UserBeanClass userbean) {
@@ -223,7 +235,6 @@ public class BikeApplicationDao {
 				userBean.setUserId(userId);
 				userBean.setUserName(userName);
 				userBean.setUserRole(userRole);
-				return userBean;
 			} else {
 				logger.warning("Incorrect username and password. Please try again");
 				return null;
@@ -233,7 +244,7 @@ public class BikeApplicationDao {
 		} finally {
 			closeConnection(result, statement, connection);
 		}
-		return null;
+		return userBean;
 	}
 
 	public List<BikeBeanClass> viewAllBikes() {
@@ -252,13 +263,12 @@ public class BikeApplicationDao {
 				bikeBean.setAvailability(result.getInt(5));
 				bikeBeanList.add(bikeBean);
 			}
-			return bikeBeanList;
 		} catch (SQLException e) {
 			logger.warning("Problem while displaying the bikes");
 		} finally {
 			closeConnection(result, statement, connection);
 		}
-		return null;
+		return bikeBeanList;
 	}
 	
 	public List<BikeBeanClass> viewAvailableBikes() {
@@ -277,13 +287,12 @@ public class BikeApplicationDao {
 				bikebean.setAvailability(result.getInt(5));
 				bikebeanlist.add(bikebean);
 			}
-			return bikebeanlist;
 		} catch (SQLException e) {
 			logger.warning("Problem while displaying the bikes");
 		} finally {
 			closeConnection(result, statement, connection);
 		}
-		return null;
+		return bikebeanlist;
 	}
 	
 	public String fetchRegistrationNumber(int bikeid) {
@@ -299,6 +308,8 @@ public class BikeApplicationDao {
 			}
 		} catch (Exception e) {
 			logger.warning("problem while fetching registration number");
+		} finally {
+			closeConnection(result, statement, connection);
 		}
 		return registrationNumber;
 	}
@@ -316,6 +327,8 @@ public class BikeApplicationDao {
 			}
 		} catch (Exception e) {
 			logger.warning("problem occurred while fetching the bike id");
+		} finally {
+			closeConnection(result, statement, connection);
 		}
 		return bikeid;
 	}
@@ -336,14 +349,16 @@ public class BikeApplicationDao {
 			statement.setInt(6, rentBean.getBikeId());
 			statement.setInt(7, rentBean.getAdvancePaid());
 			rowsaffected = statement.executeUpdate();
+			if (rowsaffected > 0) {
+				isSuccessful = true;
+			} else {
+				logger.warning("Please enter valid credentials and try again");
+				isSuccessful = false;
+			}
 		} catch (SQLException e) {
 			logger.warning("Problem while inserting the rented bike");
-		}
-		if (rowsaffected > 0) {
-			isSuccessful = true;
-		} else {
-			logger.warning("Please enter valid credentials and try again");
-			isSuccessful = false;
+		} finally {
+			closeConnection(result, statement, connection);
 		}
 		decreaseAvailability(rentBean.getBikeId());
 		setBikeStatusRented(rentBean.getRegistrationNumber());
@@ -407,6 +422,7 @@ public class BikeApplicationDao {
 		BikeRentCalculator rentCalculator = new BikeRentCalculator();
 		RentCalculatorBeanClass rentCalculatorBean = new RentCalculatorBeanClass();
 		rentCalculatorBean = rentCalculator.CalculateAmount(rentBean, getBikeDetails(bikeId).getCharge());
+		rentCalculatorBean.setRegistrationNumber(rentBean.getRegistrationNumber());
 		return rentCalculatorBean;
 	}
 
@@ -419,6 +435,8 @@ public class BikeApplicationDao {
 		setBikeStatusReturned(registrationNumber);
 		} catch(Exception e) {
 			logger.warning("Problem while returning the bike");
+		} finally {
+			closeConnection(result, statement, connection);
 		}
 		return rentCalculatorBean;
 	}
@@ -430,16 +448,42 @@ public class BikeApplicationDao {
 		try {
 			statement.setInt(1, transactionid);
 			rowsaffected = statement.executeUpdate();
+			if (rowsaffected > 0) {
+				logger.info("Bike is returned successfully");
+				increaseAvailability(bikeid);
+			} else {
+				logger.warning("Please enter valid credentials and try again");
+			}
 		} catch (SQLException e) {
 			logger.warning("Problem while updating status in rentdetails table");
 		}
-		if (rowsaffected > 0) {
-			logger.info("Bike is returned successfully");
-			increaseAvailability(bikeid);
-		} else {
-			logger.warning("Please enter valid credentials and try again");
-			return;
+	}
+	
+	public List<RentBeanClass> viewRentHistory(int userId) {
+		String query = Constants.VIEW_RENT_HISTORY;
+		PreparedStatement statement = selectQueryExecutor(query);
+		List<RentBeanClass> rentBeanList = new ArrayList<>();
+		try {
+			statement.setInt(1, userId);
+			statement.setString(2, Constants.RETURNED);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				RentBeanClass rentBean = new RentBeanClass();
+				rentBean.setTransactionId(result.getInt(1));
+				rentBean.setUserId(result.getInt(2));
+				rentBean.setBikeId(result.getInt(3));
+				rentBean.setRegistrationNumber(result.getString(4));
+				rentBean.setRentedDateTime(result.getString(5));
+				rentBean.setDuration(result.getInt(6));
+				rentBean.setEstimatedAmount(result.getInt(7));
+				rentBean.setAdvancePaid(result.getInt(8));
+				rentBean.setStatus(result.getString(9));
+				rentBeanList.add(rentBean);
+			}
+		} catch (SQLException e) {
+			logger.warning("Problem while fetching user rent history");
 		}
+		return rentBeanList;
 	}
 	
 	
@@ -491,13 +535,12 @@ public class BikeApplicationDao {
 				userbean.setPincode(result.getInt(12));
 				userbeanlist.add(userbean);
 			}
-			return userbeanlist;
 		} catch (SQLException e) {
 			logger.warning("Problem while displaying the bikes");
 		} finally {
 			closeConnection(result, statement, connection);
 		}
-		return null;
+		return userbeanlist;
 	}
 
 }

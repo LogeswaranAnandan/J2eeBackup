@@ -7,39 +7,50 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="css/basicstyle.css" />
+<link rel="stylesheet" type="text/css" href="css/table.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <title>View All Bikes</title>
 </head>
 <body>
 	<div>
-		<table>
+		<table id="table">
 			<thead>
 				<tr>
-					<th>Bike Id</th>
+					<th class="flex-grow-1">Bike Id</th>
 					<th>Manufacturer</th>
 					<th>Bike Name</th>
 					<th>Charge (per hour)</th>
 					<th>Availability</th>
+					<th>Rent the Bike</th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${bikeBeanList }" var="bikeBean">
-					<tr>
-						<td name="bike-id" value="${bikeBean.getBikeId() }">${bikeBean.getBikeId() }</td>
-						<td>${bikeBean.getManufacturer() }</td>
-						<td>${bikeBean.getBikeName() }</td>
-						<td>${bikeBean.getCharge() }</td>
-						<td>
+					<form action="CustomerServlet" method="get">
+						<tr>
+							<td class="flex-grow-1">${bikeBean.getBikeId() }</td>
+							<td>${bikeBean.getManufacturer() }</td>
+							<td>${bikeBean.getBikeName() }</td>
+							<td>${bikeBean.getCharge() }</td>
 							<c:choose>
 								<c:when test="${bikeBean.getAvailability() > '0' }">
-									Available
+									<td>Available</td>
+									<td>
+										<input type="hidden" name="bike-id"	value="${bikeBean.getBikeId() }" />
+										<input type="hidden" name="rent-duration" value="" id="rent-duration-${bikeBean.getBikeId() }"/>
+										<input type="hidden" name="advance-paid" value="" id="advance-paid-${bikeBean.getBikeId() }"/>
+										<input type="submit" name="customer-functionality" value="Rent this Bike" data-id="${bikeBean.getBikeId() }"/>
+									</td>
 								</c:when>
 								<c:otherwise>
-									Not Available
+									<td>Not Available</td>
+									<td>
+										<input type="submit" value="Rent this Bike" class="disable-btn" disabled/>
+									</td>
 								</c:otherwise>
 							</c:choose>
-						</td>
-					</tr>
+						</tr>
+					</form>
 				</c:forEach>
 			</tbody>
 		</table>
@@ -47,6 +58,6 @@
 	<div class="back-btn">
 		<button><a href="customer.jsp">Go to Home Page</a></button>
 	</div>
-	<script src="javascript/basicscript.js"></script>
+	<script src="javascript/rentbike.js"></script>
 </body>
 </html>

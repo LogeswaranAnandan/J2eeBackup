@@ -13,13 +13,14 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<fmt:bundle basename="MessagesBundle">
 	<nav>
 		<div>
-			<form action="CustomerServlet" class="nav-form">
-				<input type="submit" name="customer-functionality" value="View All Bikes"/>
-				<input type="submit" name="customer-functionality" value="View & Rent Available Bikes"/>
-				<input type="submit" name="customer-functionality" value="Return the Bike"/>
-				<input type="submit" name="customer-functionality" value="View Remaining Duration of Rent"/>
+			<form action="CustomerServlet" class="nav-form" id="nav-form">
+				<input type="hidden" id="user-request" name="user-request"/>
+				<input type="submit" id="1" name="customer-functionality" value="View All Bikes"/>
+				<input type="submit" id="3" name="customer-functionality" value="Return the Bike"/>
+				<input type="submit" id="4" name="customer-functionality" value="View Rent History"/>
 				<span id="user-name-container">
 					<i class="fa fa-user fa-lg" aria-hidden="true"></i> Welcome, <span class="user-name">${sessionScope.userName }</span>		
 				</span>
@@ -34,25 +35,15 @@
 
 	<section>
 		<div class="main-container">
-			<h1>Welcome to the WORLD OF BIKES</h1>
-			<h2> - "Feel the SOUL of every BIKE..!"</h2>
-			<form action="CustomerServlet" class="header-form">
-				<input type="submit" name="customer-functionality" value="Rent a Bike" id="rent-btn"/>
+			<h1><fmt:message key="TITLE"/></h1>
+			<h2><fmt:message key="QUOTES"/></h2>
+			<form action="CustomerServlet" id="">
+				<input type="submit" id="2" name="customer-functionality" value="Rent a Bike" class="rent-btn"/>
 			</form>
-		</div>
-		
-		<div>
-			<fmt:setLocale value="fr_FR"/>
-			<fmt:bundle basename="MessagesBundle">
-			<fmt:message key="Welcome"/><br/>
-			</fmt:bundle>
-		</div>
-		
-		<div>
-			
-		</div>
-		
+		</div>		
 	</section>
+	</fmt:bundle>
+	
 	
 	<script src="javascript/basicscript.js"></script>		
 </body>

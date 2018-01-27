@@ -28,7 +28,7 @@ input[value="Logout"]:hover {
 
 #user-name-container {
 	flex-basis: 0;
-    flex-grow: 2;
+    flex-grow: 1;
     flex-shrink: 2;
     padding: 15px;
     background-color: cadetblue;
@@ -54,12 +54,13 @@ table {
 
 tr {
 	display: flex;
+	padding: 5px 0px;
 }
 
 td,th {
 	flex-basis: 0;
-	flex-grow: 1;
-	text-align: justify;
+	flex-grow: 2;
+	text-align: center;
 	padding: 10px;
 }
 
@@ -67,12 +68,16 @@ th {
 	background-color: lightsteelblue;
 }
 
-tr:nth-child(odd) {
+tr:nth-child(2n) {
     background: linear-gradient(to right, white, aliceblue);
 }
 
-tr:nth-child(even) {
+tr:nth-child(4n) {
     background: linear-gradient(to right, aliceblue, white);
+}
+
+.flex-grow-1 {
+	flex-grow: 1;
 }
 
 div.back-btn {

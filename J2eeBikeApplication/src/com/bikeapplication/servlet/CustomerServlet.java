@@ -32,70 +32,29 @@ public class CustomerServlet extends HttpServlet {
 			throws ServletException, IOException {
 		CustomerDelegate delegate = new CustomerDelegate();
 		String functionality = request.getParameter("customer-functionality");
-		PrintWriter out = response.getWriter();
-		HttpSession session = request.getSession();
 
 		if (functionality == null) {
 			response.sendRedirect("index.jsp");
-		} else if (functionality.equals("View All Bikes")) {
+		} else if (functionality.equals("View All Bikes") || functionality.equals("Rent a Bike")) {
 			List<BikeBeanClass> bikeBeanList = delegate.viewAllBikes();
 			request.setAttribute("bikeBeanList", bikeBeanList);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("ViewAllBikes.jsp");
 			dispatcher.forward(request, response);
-		} else if (functionality.equals("View & Rent Available Bikes") || functionality.equals("Rent a Bike")) {
-			List<BikeBeanClass> bikeBeanList = delegate.viewAvailableBikes();
-			request.setAttribute("bikeBeanList", bikeBeanList);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("viewavailablebikes.jsp");
-			dispatcher.forward(request, response);
 		} else if (functionality.equals("Rent this Bike")) {
-			response.setContentType("text/html");
-			boolean isSuccessful = false;
-			RentBeanClass rentBean = new RentBeanClass();
-			int bikeId = Integer.parseInt(request.getParameter("bike-id"));
-			int rentDuration = Integer.parseInt(request.getParameter("rent-duration"));
-			int advancePaid = Integer.parseInt(request.getParameter("advance-paid"));
-			int userId = Integer.parseInt(session.getAttribute("userId").toString());
-			rentBean.setUserId(userId);
-			rentBean.setBikeId(bikeId);
-			rentBean.setDuration(rentDuration);
-			rentBean.setAdvancePaid(advancePaid);
-			isSuccessful = delegate.rentBike(rentBean);
-			if (isSuccessful == true) {
-				out.println("<script>alert('Bike is rented successfully')</script>");
-			} else {
-				out.println(
-						"<script>alert('Some problem occurred while renting the bike. Please try again..!')</script>");
-			}
+			delegate.rentBike(request, response);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("customer.jsp");
 			dispatcher.include(request, response);
 		} else if (functionality.equals("Return the Bike")) {
-			int userId = Integer.parseInt(session.getAttribute("userId").toString());
-			List<BikeBeanClass> bikeBeanList = delegate.viewUserRentedBikes(userId);
-			request.setAttribute("bikeBeanList", bikeBeanList);
+			delegate.viewUserRentedBikes(request, response);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("viewrentedbikes.jsp");
 			dispatcher.forward(request, response);
 		} else if (functionality.equals("Return this Bike")) {
-			int userId = Integer.parseInt(session.getAttribute("userId").toString());
-			int bikeId = Integer.parseInt(request.getParameter("bike-id"));
-			String registrationNumber = request.getParameter("registration-number");
-			RentCalculatorBeanClass rentCalculatorBean = delegate.returnBike(userId, bikeId, registrationNumber);
-			request.setAttribute("rentCalculatorBean", rentCalculatorBean);
-			request.setAttribute("status", "Return this Bike");
+			delegate.returnBike(request, response);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("viewrentamount.jsp");
 			dispatcher.forward(request, response);
-		} else if (functionality.equals("View Remaining Duration of Rent")) {
-			int userId = Integer.parseInt(session.getAttribute("userId").toString());
-			List<BikeBeanClass> bikeBeanList = delegate.viewUserRentedBikes(userId);
-			request.setAttribute("bikeBeanList", bikeBeanList);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("viewremainingduration.jsp");
-			dispatcher.forward(request, response);
-		} else if (functionality.equals("View Remaining Duration")) {
-			int userId = Integer.parseInt(session.getAttribute("userId").toString());
-			int bikeId = Integer.parseInt(request.getParameter("bike-id"));
-			String registrationNumber = request.getParameter("registration-number");
-			RentCalculatorBeanClass rentCalculatorBean = delegate.viewRemainingDuration(userId, bikeId, registrationNumber);
-			request.setAttribute("rentCalculatorBean", rentCalculatorBean);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("viewrentamount.jsp");
+		} else if (functionality.equals("View Rent History")) {
+			delegate.viewRentHistory(request, response);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("viewrenthistory.jsp");
 			dispatcher.forward(request, response);
 		}
 	}

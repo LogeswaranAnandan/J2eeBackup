@@ -11,11 +11,11 @@
 <body>
 	<nav>
 		<div>
-			<form action="CustomerServlet" class="nav-form">
-				<input type="submit" name="customer-functionality" value="View All Bikes"/>
-				<input type="submit" name="customer-functionality" value="View & Rent Available Bikes"/>
-				<input type="submit" name="customer-functionality" value="Return the Bike"/>
-				<input type="submit" name="customer-functionality" value="View Remaining Duration of Rent"/>
+			<form action="CustomerServlet" class="nav-form" id="nav-form">
+				<input type="hidden" id="user-request" name="user-request"/>
+				<input type="submit" id="1" name="customer-functionality" value="View All Bikes"/>
+				<input type="submit" id="3" name="customer-functionality" value="Return the Bike"/>
+				<input type="submit" id="4" name="customer-functionality" value="View Rent History"/>
 				<span id="user-name-container">
 					<i class="fa fa-user fa-lg" aria-hidden="true"></i> Welcome, <span class="user-name">${sessionScope.userName }</span>		
 				</span>
