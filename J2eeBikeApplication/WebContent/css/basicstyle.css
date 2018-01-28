@@ -121,3 +121,27 @@ input[value="Logout"] {
 input {
 	outline: none;
 }
+
+input[type="submit"] {
+	cursor: pointer;
+}
+
+input[disabled] {
+	cursor: auto;
+}
+
+.red-button {
+	background-color: #f44336;
+	color: white;
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+}
+
+.green-button {
+	background-color: #4CAF50;
+	color: white;
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+}

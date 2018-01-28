@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -94,7 +95,19 @@ public class CustomerDelegate {
 	public void viewRentHistory(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		int userId = Integer.parseInt(session.getAttribute("userId").toString());
-		List<RentBeanClass> rentBeanList = dao.viewRentHistory(userId);
+		List<Object> objectList = dao.viewRentHistory(userId);
+		List<BikeBeanClass> bikeBeanList = dao.viewAllBikes();
+		List<RentBeanClass> rentBeanList = new ArrayList<>();
+		List<RentCalculatorBeanClass> rentCalculatorBeanList = new ArrayList<>();
+		for (Object object : objectList) {
+			if(object instanceof RentBeanClass) {
+				rentBeanList.add((RentBeanClass) object);
+			} else if(object instanceof RentCalculatorBeanClass) {
+				rentCalculatorBeanList.add((RentCalculatorBeanClass) object);
+			}
+		}
 		request.setAttribute("rentBeanList", rentBeanList);
+		request.setAttribute("rentCalculatorBeanList", rentCalculatorBeanList);
+		request.setAttribute("bikeBeanList", bikeBeanList);
 	}
 }

@@ -48,6 +48,8 @@ public class AdminServlet extends HttpServlet {
 			request.setAttribute("userBeanList", userBeanList);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("adminviewallusers.jsp");
 			dispatcher.forward(request, response);
+		} else if (functionality.equals("Add New Bike")) {
+			response.sendRedirect("adminaddnewbike.jsp");
 		}
 		
 		

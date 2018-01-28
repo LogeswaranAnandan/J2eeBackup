@@ -36,11 +36,15 @@ public class BikeRentCalculator {
 			int remainingPayment = actualCharge - advancePaid;
 			rentCalculatorBean.setHoursRented(hoursRented);
 			rentCalculatorBean.setActualCharge(actualCharge);
+			rentCalculatorBean.setPenaltyHours(0);
+			rentCalculatorBean.setPenaltyCharge(0);
+			rentCalculatorBean.setTotalCharge(actualCharge);
 			rentCalculatorBean.setRemainingRentTime(remainingRentTime);
 			rentCalculatorBean.setAdvancePaid(advancePaid);
 			rentCalculatorBean.setRemainingPayment(remainingPayment);
-			
 		}
+		rentCalculatorBean.setRegistrationNumber(rentBean.getRegistrationNumber());
+		rentCalculatorBean.setTransactionId(rentBean.getTransactionId());
 		return rentCalculatorBean;
 	}
 

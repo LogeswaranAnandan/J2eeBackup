@@ -5,6 +5,7 @@ public class Constants {
 	public static final String URL = "jdbc:mysql://localhost:3306/bikerentingapplication";
 	public static final String USERNAME = "root";
 	public static final String PASSWORD = "zilkeradmin";
+	public static final String INVALID_LOGIN = "Invalid username or password";
 	public static final String CHOOSE_ROLE = "Choose your role\n 1.User\n 2.Admin\n Enter your choice : ";
 	public static final String TYPE_OF_USER = "\n 1.Existing user\n 2.New User\n Enter your choice : ";
 	public static final String INVALID_CHOICE = "Invalid choice. Please try again with a valid choice";
@@ -49,7 +50,8 @@ public class Constants {
 	public static final String GET_BIKEID = "select bikeid from bikeregistrationdetails where registrationnumber = ?";
 	public static final String BIKE_STATUS_RENTED = "update bikeregistrationdetails set status = 'Rented' where registrationnumber = ?";
 	public static final String BIKE_STATUS_RETURNED = "update bikeregistrationdetails set status = 'Available' where registrationnumber = ?";
-	public static final String VIEW_RENT_HISTORY = "select * from rentdetails where userid=? and status=? order by transactionid desc;";
+	public static final String VIEW_RENT_HISTORY = "select * from rentdetails inner join revenuedetails where revenuedetails.transactionid = rentdetails.transactionid AND rentdetails.userid = ? order by rentdetails.transactionid desc";
+	public static final String INSERT_REVENUE_DETAILS = "insert into revenuedetails values(?,?,?,?,?,?);";
 	public static final String RETURNED = "Returned";
 	public static final String RENTED = "Rented";
 	

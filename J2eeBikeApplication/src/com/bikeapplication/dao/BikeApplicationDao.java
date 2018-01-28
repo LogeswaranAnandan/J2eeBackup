@@ -31,7 +31,7 @@ public class BikeApplicationDao {
 	// Executes a SELECT QUERY a returns a ResultSet
 	public PreparedStatement selectQueryExecutor(String query) {
 		try {
-			Connection connection = dbconnection.getConnection();
+			connection = dbconnection.getConnection();
 			statement = connection.prepareStatement(query);
 			return statement;
 		} catch (Exception e) {
@@ -422,7 +422,6 @@ public class BikeApplicationDao {
 		BikeRentCalculator rentCalculator = new BikeRentCalculator();
 		RentCalculatorBeanClass rentCalculatorBean = new RentCalculatorBeanClass();
 		rentCalculatorBean = rentCalculator.CalculateAmount(rentBean, getBikeDetails(bikeId).getCharge());
-		rentCalculatorBean.setRegistrationNumber(rentBean.getRegistrationNumber());
 		return rentCalculatorBean;
 	}
 
@@ -432,6 +431,7 @@ public class BikeApplicationDao {
 		RentBeanClass rentBean = getRentDetails(userId, bikeId, registrationNumber);
 		rentCalculatorBean = rentCalculator(rentBean, bikeId);
 		updateRentStatus(rentBean.getTransactionId(), rentBean.getBikeId());
+		insertRevenueDetails(rentCalculatorBean);
 		setBikeStatusReturned(registrationNumber);
 		} catch(Exception e) {
 			logger.warning("Problem while returning the bike");
@@ -456,34 +456,60 @@ public class BikeApplicationDao {
 			}
 		} catch (SQLException e) {
 			logger.warning("Problem while updating status in rentdetails table");
+		} finally {
+			closeConnection(result, statement, connection);
 		}
 	}
 	
-	public List<RentBeanClass> viewRentHistory(int userId) {
+	public void insertRevenueDetails(RentCalculatorBeanClass rentCalculatorBean) {
+		String query = Constants.INSERT_REVENUE_DETAILS;
+		PreparedStatement statement = queryExecutor(query);
+		int rowsAffected = 0;
+		try {
+			statement.setInt(1, rentCalculatorBean.getTransactionId());
+			statement.setInt(2, rentCalculatorBean.getHoursRented());
+			statement.setInt(3, rentCalculatorBean.getActualCharge());
+			statement.setInt(4, rentCalculatorBean.getPenaltyHours());
+			statement.setInt(5, rentCalculatorBean.getPenaltyCharge());
+			statement.setInt(6, rentCalculatorBean.getTotalCharge());
+			rowsAffected = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.warning("Problem while inserting value into revenue details table");
+		} finally {
+			closeConnection(result, statement, connection);
+		}
+	}
+	
+	public List<Object> viewRentHistory(int userId) {
 		String query = Constants.VIEW_RENT_HISTORY;
 		PreparedStatement statement = selectQueryExecutor(query);
-		List<RentBeanClass> rentBeanList = new ArrayList<>();
+		List<Object> objectList = new ArrayList<>();
 		try {
 			statement.setInt(1, userId);
-			statement.setString(2, Constants.RETURNED);
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				RentBeanClass rentBean = new RentBeanClass();
+				RentCalculatorBeanClass rentCalculatorBean = new RentCalculatorBeanClass();
+				BikeBeanClass bikeBean = new BikeBeanClass();
 				rentBean.setTransactionId(result.getInt(1));
-				rentBean.setUserId(result.getInt(2));
 				rentBean.setBikeId(result.getInt(3));
 				rentBean.setRegistrationNumber(result.getString(4));
 				rentBean.setRentedDateTime(result.getString(5));
-				rentBean.setDuration(result.getInt(6));
-				rentBean.setEstimatedAmount(result.getInt(7));
-				rentBean.setAdvancePaid(result.getInt(8));
-				rentBean.setStatus(result.getString(9));
-				rentBeanList.add(rentBean);
+				rentCalculatorBean.setTransactionId(result.getInt(10));
+				rentCalculatorBean.setHoursRented(result.getInt(11));
+				rentCalculatorBean.setActualCharge(result.getInt(12));
+				rentCalculatorBean.setPenaltyHours(result.getInt(13));
+				rentCalculatorBean.setPenaltyCharge(result.getInt(14));
+				rentCalculatorBean.setTotalCharge(result.getInt(15));
+				objectList.add(rentBean);
+				objectList.add(rentCalculatorBean);
 			}
 		} catch (SQLException e) {
 			logger.warning("Problem while fetching user rent history");
+		} finally {
+			closeConnection(result, statement, connection);
 		}
-		return rentBeanList;
+		return objectList;
 	}
 	
 	

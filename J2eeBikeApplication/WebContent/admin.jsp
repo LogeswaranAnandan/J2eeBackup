@@ -1,33 +1,25 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@page import="java.util.ResourceBundle"%>
+<%@page import="java.util.Locale"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="css/basicstyle.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<title>Admin Console</title>
+<link rel="stylesheet" type="text/css" href="css/admin.css" />
+<title>Welcome Admin</title>
 </head>
 <body>
-	<nav>
-		<div>
-			<form action="AdminServlet" class="nav-form">
-				<input type="submit" name="admin-functionality" value="View All Bikes"/>
-				<input type="submit" name="admin-functionality" value="View All Rented Bikes"/>
-				<input type="submit" name="admin-functionality" value="Add New Bike"/>
-				<input type="submit" name="admin-functionality" value="View Customer Details"/>
-				<span id="user-name-container">
-					<i class="fa fa-user fa-lg" aria-hidden="true"></i> Welcome, <span class="user-name">${sessionScope.userName }</span>		
-				</span>
+	<jsp:include page="adminheader.jsp" />
+	<fmt:bundle basename="MessagesBundle">
+	<section>
+		<div class="main-container">
+			<h1><fmt:message key="TITLE"/></h1>
+			<h2><fmt:message key="QUOTES"/></h2>
+			<form action="CustomerServlet">
+				<input type="submit" name="customer-functionality" value="Rent a Bike" class="rent-btn"/>
 			</form>
-		</div>
-	</nav>
-	<div id="logout-container" class="display-none">
-		<form action="LogoutServlet">
-			<input type="submit" value="Logout"/>
-		</form>
-	</div>
-	
-	<script src="javascript/basicscript.js"></script>	
+		</div>	
+	</section>
+	</fmt:bundle>
 </body>
 </html>

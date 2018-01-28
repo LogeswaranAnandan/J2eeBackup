@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.bikeapplication.bean.UserBeanClass;
+import com.bikeapplication.constants.Constants;
 import com.bikeapplication.delegate.BikeApplicationDelegate;
 
 @WebServlet("/LoginServlet")
@@ -49,10 +50,13 @@ public class LoginServlet extends HttpServlet {
 					session.setAttribute("userRole", userBean.getUserRole());
 					requestDispatcher.forward(request, response);
 				} else {
-					response.sendRedirect("index.jsp");
+					request.setAttribute("loginStatus", "invalid");
+					requestDispatcher = request.getRequestDispatcher("index.jsp");
+					requestDispatcher.forward(request, response);
 				}
 			} catch (Exception e) {
 				response.sendRedirect("index.jsp");
+				logger.warning("in login exception");
 			}
 		} else if (userRequest.equals("SIGN UP")) {
 			RequestDispatcher dispatcher;
@@ -77,6 +81,10 @@ public class LoginServlet extends HttpServlet {
 				dispatcher = request.getRequestDispatcher("index.jsp");
 			}
 			dispatcher.include(request, response);
+		} else if (userRequest.equals("Logout")) {
+			HttpSession session = request.getSession();
+			session.invalidate();
+			response.sendRedirect("index.jsp");
 		}
 	}
 

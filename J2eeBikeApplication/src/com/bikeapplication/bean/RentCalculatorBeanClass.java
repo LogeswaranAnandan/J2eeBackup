@@ -1,6 +1,7 @@
 package com.bikeapplication.bean;
 
 public class RentCalculatorBeanClass {
+	private int transactionId;
 	private int hoursRented;
 	private int actualCharge;
 	private int penaltyHours;
@@ -12,6 +13,12 @@ public class RentCalculatorBeanClass {
 	private String registrationNumber;
 	
 	
+	public int getTransactionId() {
+		return transactionId;
+	}
+	public void setTransactionId(int transactionId) {
+		this.transactionId = transactionId;
+	}
 	public String getRegistrationNumber() {
 		return registrationNumber;
 	}
