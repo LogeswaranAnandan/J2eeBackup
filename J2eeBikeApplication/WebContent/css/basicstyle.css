@@ -8,7 +8,8 @@ nav {
 	display: flex;
 }
 
-.nav-form input[type="submit"] {
+.nav-form input[type="submit"],
+.nav-form a {
 	flex-basis: 0;
 	flex-grow: 1;
 	flex-shrink: 5;
@@ -20,7 +21,15 @@ nav {
 	color: white;
 }
 
+.nav-form a {
+	text-decoration: none;
+	text-align: center;
+	font-weight: bold;
+    padding: 18px 15px 12px;
+}
+
 .nav-form input[type="submit"]:hover,
+.nav-form a:hover,
 button > a:hover,
 input[value="Logout"]:hover {
 	color: #ffcc66;
@@ -43,6 +52,13 @@ input[value="Logout"]:hover {
     font-size: 23px;
     font-weight: bold;
     text-shadow: 2px 2px forestgreen;
+}
+
+#menu-icon {
+    padding: 15px;
+    font-size: 25px;
+    color: white;	
+    display: none;
 }
 
 table {
@@ -144,4 +160,56 @@ input[disabled] {
     padding: 5px 10px;
     font-size: 16px;
     border: none;
+}
+
+
+@media screen and (max-width : 800px) and (min-width : 200px) {
+	
+	.nav-form {
+		position: relative;
+		display: block;
+	}
+	
+	.nav-form input[type="submit"],
+	#user-name-container {
+		display: none;
+	}
+	
+	#menu-icon {
+		display: inline-block;
+	    float: right;
+	    cursor: pointer;
+	}
+	
+	.nav-form a {
+		text-align: left;
+		display:inline-block;
+	}
+	
+	.nav-form.display-menu input[type="submit"] {
+	    display: block;
+	    width: 100%;
+	    background-color: grey;
+	    text-align: left;
+	}
+	
+	.nav-form.display-menu > #menu-icon {
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+	
+	.nav-form.display-menu input[type="submit"]:hover {
+		background: #333;
+	}
+	
+	#logout {
+		position: static;
+		display: block;
+	    width: 100%;
+	    text-align: left;
+	    background: gray;
+	    border: none;
+	}
+	
 }
