@@ -37,11 +37,6 @@
 			</c:otherwise>
 		</c:choose>
 	</div>
-	<div class="back-btn">
-		<button>
-			<a href="customer.jsp">Go to Home Page</a>
-		</button>
-	</div>
 	<script src="javascript/basicscript.js"></script>
 </body>
 </html>

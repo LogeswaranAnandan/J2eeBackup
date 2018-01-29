@@ -13,6 +13,7 @@
 		<div>
 			<form action="AdminServlet" class="nav-form" id="nav-form">
 				<input type="hidden" id="user-request" name="user-request"/>
+				<a href="admin.jsp">HOME</a>
 				<input type="submit" name="admin-functionality" value="View All Bikes"/>
 				<input type="submit" name="admin-functionality" value="View All Rented Bikes"/>
 				<input type="submit" name="admin-functionality" value="Add New Bike"/>
@@ -20,6 +21,7 @@
 				<span id="user-name-container">
 					<i class="fa fa-user fa-lg" aria-hidden="true"></i> Welcome, <span class="user-name">${sessionScope.userName }</span>		
 				</span>
+				<span id="menu-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
 			</form>
 		</div>
 	</nav>

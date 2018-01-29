@@ -68,3 +68,10 @@ input {
 	outline: none;
 }
 
+@media screen and (max-width : 800px) and (min-width : 200px) {
+	
+	section {
+		height: 89%;
+	}	
+}
+

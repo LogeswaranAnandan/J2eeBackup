@@ -15,9 +15,6 @@
 		<div class="main-container">
 			<h1><fmt:message key="TITLE"/></h1>
 			<h2><fmt:message key="QUOTES"/></h2>
-			<form action="CustomerServlet">
-				<input type="submit" name="customer-functionality" value="Rent a Bike" class="rent-btn"/>
-			</form>
 		</div>	
 	</section>
 	</fmt:bundle>

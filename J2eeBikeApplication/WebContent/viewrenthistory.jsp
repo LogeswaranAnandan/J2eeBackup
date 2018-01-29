@@ -15,12 +15,12 @@
 			<thead>
 				<tr>
 					<th>Bike Name</th>
-					<th>Registration Number</th>
+					<th class="hide-in-mobile">Registration Number</th>
 					<th>Rented Date & Time</th>
 					<th>Rent Duration</th>
-					<th>Actual Charge</th>
-					<th>Penalty Duration</th>
-					<th>Penalty Charge</th>
+					<th class="hide-in-mobile">Actual Charge</th>
+					<th class="hide-in-mobile">Penalty Duration</th>
+					<th class="hide-in-mobile">Penalty Charge</th>
 					<th>Total Charge</th>
 				</tr>
 			</thead>
@@ -28,32 +28,25 @@
 				<c:forEach items="${rentBeanList }" var="rentBean">
 					<tr>
 						<c:forEach items="${rentCalculatorBeanList }" var="revenueBean">
-							<c:choose>
-							<c:when test="${rentBean.getTransactionId() eq revenueBean.getTransactionId() }">
+							<c:if test="${rentBean.getTransactionId() eq revenueBean.getTransactionId() }">
 								<c:forEach items="${bikeBeanList }" var="bikeBean">
-									<c:choose>
-									<c:when test="${rentBean.getBikeId() == bikeBean.getBikeId() }">
+									<c:if test="${rentBean.getBikeId() == bikeBean.getBikeId() }">
 										<td>${bikeBean.getManufacturer() } - ${bikeBean.getBikeName() }</td>
-									</c:when>
-									</c:choose>
+									</c:if>
 								</c:forEach>
-								<td>${rentBean.getRegistrationNumber() }</td>
+								<td class="hide-in-mobile">${rentBean.getRegistrationNumber() }</td>
 								<td>${rentBean.getRentedDateTime() }</td>
 								<td>${revenueBean.getHoursRented() } hours</td>
-								<td>&#8377; ${revenueBean.getActualCharge() }</td>
-								<td>${revenueBean.getPenaltyHours() } hours</td>
-								<td>&#8377; ${revenueBean.getPenaltyCharge() }</td>
+								<td class="hide-in-mobile">&#8377; ${revenueBean.getActualCharge() }</td>
+								<td class="hide-in-mobile">${revenueBean.getPenaltyHours() } hours</td>
+								<td class="hide-in-mobile">&#8377; ${revenueBean.getPenaltyCharge() }</td>
 								<td>&#8377; ${revenueBean.getTotalCharge() }</td>
-							</c:when>
-							</c:choose>
+							</c:if>
 						</c:forEach>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
-	</div>
-	<div class="back-btn">
-		<button><a href="customer.jsp">Go to Home Page</a></button>
 	</div>
 	<script src="javascript/rentbike.js"></script>
 </body>

@@ -79,8 +79,5 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="back-btn">
-		<button><a href="customer.jsp">Go to Home Page</a></button>
-	</div>
 </body>
 </html>

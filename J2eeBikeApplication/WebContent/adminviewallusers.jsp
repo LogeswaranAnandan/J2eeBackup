@@ -5,12 +5,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="css/table.css" />
 <title>View All Users</title>
 </head>
 <body>
 	<jsp:include page="adminheader.jsp" />
 	<div>
-		<table>
+		<table id="table">
 			<thead>
 				<tr>
 					<th>User Id</th>

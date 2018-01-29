@@ -53,9 +53,6 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="back-btn">
-		<button><a href="customer.jsp">Go to Home Page</a></button>
-	</div>
 	<script src="javascript/rentbike.js"></script>
 </body>
 </html>

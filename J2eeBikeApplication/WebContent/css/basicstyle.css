@@ -2,6 +2,7 @@
 
 nav {
 	background-color: cadetblue;
+	height: 8%;
 }
 
 .nav-form {
@@ -165,6 +166,10 @@ input[disabled] {
 
 @media screen and (max-width : 800px) and (min-width : 200px) {
 	
+	nav {
+		height: 11%;
+	}
+	
 	.nav-form {
 		position: relative;
 		display: block;
@@ -199,7 +204,8 @@ input[disabled] {
 		top: 0;
 	}
 	
-	.nav-form.display-menu input[type="submit"]:hover {
+	.nav-form.display-menu input[type="submit"]:hover,
+	#logout:hover {
 		background: #333;
 	}
 	
@@ -210,6 +216,63 @@ input[disabled] {
 	    text-align: left;
 	    background: gray;
 	    border: none;
+	}
+	
+	/* 
+	table {
+	    display: flex;
+	    flex-direction: row;
+	    margin-top: 10px;
+	    clear: both;
+	}
+	
+	tr {
+		display: flex;
+	    padding: 5px 0px;
+	    flex-wrap: wrap;
+	    flex-direction: column
+	}
+	
+	tbody {
+		display: flex;
+		overflow: auto;
+	}
+	 */
+	 
+	tbody {
+		overflow: auto;
+	}
+	
+	.main-container {
+	    position: relative;
+	    top: 25vh;
+	}
+	
+	.main-container > h1 {
+    	font-size: 35px;
+	}
+	
+	.main-container > h2 {
+   		font-size: 22px;
+	}
+	
+	.rent-btn {
+    	font-size: 20px;
+	}
+	
+	td,
+	th {
+		flex-basis: 40px;
+	}
+	
+	.red-button,
+	.green-button {
+		font-size: 13px;
+		padding: 5px;
+	}
+	
+	.hide-in-mobile {
+		display: none;
 	}
 	
 }
