@@ -3,6 +3,7 @@ package com.bikeapplication.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ import com.bikeapplication.delegate.AdminDelegate;
 @WebServlet("/AdminServlet")
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	Logger logger = Logger.getLogger(AdminServlet.class.getName());
        
     public AdminServlet() {
         super();
@@ -30,7 +32,6 @@ public class AdminServlet extends HttpServlet {
 		String functionality = request.getParameter("admin-functionality");
 		PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession();
-		
 		if (functionality == null) {
 			response.sendRedirect("index.jsp");
 		} else if (functionality.equals("View All Bikes")) {
@@ -49,7 +50,13 @@ public class AdminServlet extends HttpServlet {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("adminviewallusers.jsp");
 			dispatcher.forward(request, response);
 		} else if (functionality.equals("Add New Bike")) {
-			response.sendRedirect("adminaddnewbike.jsp");
+			List<BikeBeanClass> bikeBeanList = delegate.viewAllBikes();
+			request.setAttribute("bikeBeanList", bikeBeanList);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("adminaddnewbike.jsp");
+			dispatcher.forward(request, response);
+		} else if (functionality.equals("Add Bike")) {
+			delegate.addNewRegistrationNumber(request, response);
+			
 		}
 		
 		

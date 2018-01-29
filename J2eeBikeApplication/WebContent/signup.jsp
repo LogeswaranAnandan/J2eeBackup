@@ -7,9 +7,9 @@
 	<link rel="stylesheet" type="text/css" href="css/signup.css" />
 	<title>Sign Up Form</title>
 </head>
-<body>
+<body onload="bootstrapping()">
 	<div>
-		<form action="LoginServlet" method="post">
+		<form action="SessionServlet" method="post">
 			<div class="login-container">
 				<a href="index.jsp"><span class="sign-in">SIGN IN</span></a>
 				<a href="signup.jsp"><span class="sign-up">SIGN UP</span></a>
@@ -27,12 +27,13 @@
 			<label for="phonenumber">PHONE NUMBER</label>
 			<input type="number" id="phonenumber" name="phonenumber" placeholder="9876543210" required/><br/>
 			<label for="licensenumber">Driving License Number</label>
-			<input type="text" id="licensenumber" name="licensenumber" placeholder="TN 10 AS234453423"/><br/>
+			<input type="text" id="licensenumber" name="licensenumber" placeholder="TN 10 20138475294"/><br/>
 			<label for="userpassword">Password</label>
 			<input type="password" id="userpassword" name="userpassword" placeholder="password"/><br/>
 			<input type="submit" name="submit-button" value="SIGN UP"/>
 		</form>
 	</div>
+	<script src="javascript/validation.js"></script>	
 </body>
 
 </html>

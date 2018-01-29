@@ -16,13 +16,13 @@ import com.bikeapplication.bean.UserBeanClass;
 import com.bikeapplication.constants.Constants;
 import com.bikeapplication.delegate.BikeApplicationDelegate;
 
-@WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/SessionServlet")
+public class SessionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(LoginServlet.class.getName());
+	Logger logger = Logger.getLogger(SessionServlet.class.getName());
 	BikeApplicationDelegate delegate = new BikeApplicationDelegate();
 
-	public LoginServlet() {
+	public SessionServlet() {
 		super();
 	}
 

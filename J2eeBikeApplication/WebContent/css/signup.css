@@ -83,6 +83,14 @@ input[type='submit'] {
     padding-bottom: 1px;
 }
 
+input.wrong-input {
+	border: 1px solid red;
+}
+
+input:focus {
+	border: 1px solid #1762EE;
+}
+
 a {
 	text-decoration: none;
 }

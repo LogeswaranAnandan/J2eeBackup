@@ -54,5 +54,6 @@ public class Constants {
 	public static final String INSERT_REVENUE_DETAILS = "insert into revenuedetails values(?,?,?,?,?,?);";
 	public static final String RETURNED = "Returned";
 	public static final String RENTED = "Rented";
+	public static final String ADD_REGISTRATION_NUMBER = "insert into bikeregistrationdetails values(?,?,'Available')";
 	
 }

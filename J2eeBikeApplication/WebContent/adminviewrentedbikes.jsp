@@ -40,9 +40,6 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="back-btn">
-		<button><a href="admin.jsp">Go to Home Page</a></button>
-	</div>
 
 </body>
 </html>

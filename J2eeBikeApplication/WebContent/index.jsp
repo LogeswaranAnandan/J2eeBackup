@@ -11,15 +11,15 @@
 </head>
 <body>
 	<div class="container">
-		<form action="LoginServlet" method="post">
+		<form action="SessionServlet" method="post">
 			<div class="login-container">
 				<span class="welcome">Welcome</span>
 			</div>
 			<div class="form-label-container">
 				<label for="username">USERNAME or PHONENUMBER</label>
-				<input type="text" id="username" name="username" placeholder="Enter your username or phonenumber..." required/><br/>
+				<input type="text" id="username" name="username" placeholder="Enter your username or phonenumber..." required autofocus /><br/>
 				<label for="password">PASSWORD</label>
-				<input type="password" id="password" name="password" placeholder="Enter your password..." required/><br/>
+				<input type="password" id="password" name="password" placeholder="Enter your password..." required autofocus /><br/>
 				<c:if test="${loginStatus eq 'invalid' }">
 					<font><i class="fa fa-info-circle" aria-hidden="true"></i>Invalid Username or Password</font>
 				</c:if>

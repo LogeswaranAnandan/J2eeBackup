@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <title>Customer Header Page</title>
 </head>
-<body>
+<body onload="bootstrapping()">
 	<nav>
 			<form action="CustomerServlet" class="nav-form" id="nav-form">
 				<input type="hidden" id="user-request" name="user-request"/>
@@ -23,7 +23,7 @@
 			</form>
 	</nav>
 	<div id="logout-container" class="display-none">
-		<form action="LoginServlet">
+		<form action="SessionServlet">
 			<input type="submit" value="Logout" id="logout" name="submit-button"/>
 		</form>
 	</div>

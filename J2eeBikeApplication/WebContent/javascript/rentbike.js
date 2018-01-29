@@ -1,4 +1,8 @@
-document.getElementById('table').addEventListener('click', setHiddenFieldValue);
+document.getElementsByTagName('body')[0].onload = function() {bootstrapping()};
+
+function bootstrapping() {
+	document.getElementById('table').addEventListener('click', setHiddenFieldValue);
+}
 
 function setHiddenFieldValue(event) {
 	var target = event.srcElement;
